@@ -16,9 +16,11 @@ public class PaymentController {
     @Autowired
     private PaymentService service;
 
-    @PostMapping
+    @PostMapping("/doPayment")
     public Payment doPayment(@RequestBody Payment payment) {
         return service.doPayment(payment);
     }
+
+    
     
 }
