@@ -7,5 +7,7 @@ import com.melck.paymentservice.entity.Payment;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+
+    Payment findByOrderId(Long orderId);
     
 }
