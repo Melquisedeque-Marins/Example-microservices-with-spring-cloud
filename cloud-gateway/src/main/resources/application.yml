@@ -1,3 +1,5 @@
+server:
+  port: 9191
 spring:
   application:
     name: GATEWAY-SERVICE
@@ -13,9 +15,6 @@ spring:
           predicates:
             - Path=/payments/**
 
-server:
-  port: 8989
-
 eureka:
   client:
     register-with-eureka: true
@@ -25,3 +24,12 @@ eureka:
   instance: 
     hostname: localhost
 
+resilience4j.circuitbreaker:
+    instances:
+        order-service:
+            registerHealthIndicator: true
+            slidingWindowSize: 100
+        payment-service:
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+ 
