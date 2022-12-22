@@ -1,5 +1,6 @@
 server:
   port: 9191
+
 spring:
   application:
     name: GATEWAY-SERVICE
@@ -10,10 +11,21 @@ spring:
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: order-service
+                fallbackuri: forward:/orderFallback
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-service
+                fallbackuri: forward:/paymentFallback
+
 
 eureka:
   client:
@@ -24,12 +36,16 @@ eureka:
   instance: 
     hostname: localhost
 
-resilience4j.circuitbreaker:
-    instances:
-        order-service:
-            registerHealthIndicator: true
-            slidingWindowSize: 100
-        payment-service:
-            registerHealthIndicator: true
-            slidingWindowSize: 10
- 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
