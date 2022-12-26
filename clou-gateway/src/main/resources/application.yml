@@ -1,6 +1,17 @@
 spring:
   application:
-  name: GATEWAY-SERVICE
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/orders/**
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payments/**
 
 eureka:
   client:
@@ -13,3 +24,4 @@ eureka:
 
 server:
   port: 8989
+
