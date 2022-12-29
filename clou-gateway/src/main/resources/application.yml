@@ -8,10 +8,22 @@ spring:
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/orders/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderFallback
+                fallbackUri: foward:/fallback/order
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/payments/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentFallback
+                fallbackUri: foward:/fallback/payment
 
 eureka:
   client:
